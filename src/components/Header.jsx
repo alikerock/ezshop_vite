@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import styles from './Header.module.css';
 import { useCart } from '../cart/CartContext';
+import { Link } from "react-router";
 
 export default function Header({onSearch}) {
   const [keyword, setKeyword] = useState('');
-  const {cartItems, count} = useCart();
-  console.log(cartItems);
-  
+  const {count} = useCart();
+
   const handleChange = (e)=>{
     setKeyword(e.target.value);
   }
@@ -41,9 +41,10 @@ export default function Header({onSearch}) {
               <li><a href="">로그인</a></li>
               <li><a href="">회원가입</a></li>
               <li>
-                <a href="" data-cart={count} className={styles.cart}>
+                <Link to="/cart" data-cart={count} className={styles.cart}>
                   <img src="images/icon_cart.svg" alt=""/>
-                </a></li>
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
