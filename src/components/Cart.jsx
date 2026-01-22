@@ -1,4 +1,4 @@
-// import styles from './Cart.module.css';
+import styles from './Cart.module.css';
 import { useCart } from '../cart/CartContext';
 
 export default function Cart() {
@@ -11,10 +11,13 @@ export default function Cart() {
         cartItems.length === 0 ?
           <p>장바구니에 상품이 없습니다.</p>
           :
-          <div className="cartlistWrapper">
-            <ul className="cartlist">
+          <div className={styles.cartlistWrapper}>
+            <button onClick={()=>{
+              if(confirm('정말 모두 비울까요?')) clearCart()
+            }}>전체 비우기</button>
+            <ul className={styles.cartlist}>
               {cartItems.map(item => 
-                <li>
+                <li key={item.id}>
                   <img src={item.thumbnail} alt="" />
                   <div>
                     {item.title}
@@ -24,14 +27,16 @@ export default function Cart() {
                     {item.qty}
                   </div>
                   <div>
-                    <button>+</button>
-                    <button>-</button>
+                    <button onClick={()=>{incQty(item.id)}}>+</button>
+                    <button onClick={()=>{decQty(item.id)}}>-</button>
                   </div>
-                  <button>삭제</button>
+                  <button onClick={()=>{
+                      if(confirm('해당 상품을 삭제할까요?')) removeItem(item.id);                    
+                    }}>삭제</button>
                 </li>
               )}
             </ul>
-            <div className="cart_info">
+            <div className={styles.cart_info}>
               <h3>합계</h3>
               <h4>{totalPrice}</h4>
               <button>주문하기</button>
