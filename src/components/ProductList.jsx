@@ -40,15 +40,19 @@ export default function ProductList({ keyword }) {
     const byCategory = (p)=> category === 'all' ? true  : p.category === category;
     const byBrand = (p)=> brand === 'all' ? true  : p.brand === brand;
     const byPrice = (p)=>{
+      const priceKRW = p.price * 1465;
       switch(pricekey){
-        case "":
-          return 
-        case "":
-          return 
-        case "":
-          return 
+        case "under10":
+          return priceKRW<= 100000;
+
+        case "10to50":
+          return priceKRW > 100000 && priceKRW<= 500000;
+
+        case "over50":
+          return priceKRW > 500000;
+
         default:
-          return 
+          return true;
       }
     }
     return all.filter(p=>byCategory(p) && byBrand(p) && byPrice(p));
