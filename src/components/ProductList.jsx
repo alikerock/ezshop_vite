@@ -36,32 +36,29 @@ export default function ProductList({ keyword }) {
   console.log(brands);
 
   //필터링(filtering)
-  const filtered = useMemo(() =>{
-    const byCategory = (p)=> category === 'all' ? true  : p.category === category;
-    const byBrand = (p)=> brand === 'all' ? true  : p.brand === brand;
-    const byPrice = (p)=>{
+  const filtered = useMemo(() => {
+    const byCategory = (p) => category === 'all' ? true : p.category === category;
+    const byBrand = (p) => brand === 'all' ? true : p.brand === brand;
+    const byPrice = (p) => {
       const priceKRW = p.price * 1465;
-      switch(pricekey){
+      switch (pricekey) {
         case "under10":
-          return priceKRW<= 100000;
-
+          return priceKRW <= 100000;          
         case "10to50":
-          return priceKRW > 100000 && priceKRW<= 500000;
-
+          return priceKRW > 100000 && priceKRW <= 500000;
         case "over50":
           return priceKRW > 500000;
-
         default:
           return true;
       }
     }
-    return all.filter(p=>byCategory(p) && byBrand(p) && byPrice(p));
-    },[all, category, brand, pricekey]
+    return all.filter(p => byCategory(p) && byBrand(p) && byPrice(p));
+  }, [all, category, brand, pricekey]
   );
-   
+
 
   //필터 초기화
-  const resetFilter = ()=>{
+  const resetFilter = () => {
     setCategory('all');
     setBrand('all');
     setPricekey('all');
@@ -70,15 +67,34 @@ export default function ProductList({ keyword }) {
 
   //정렬(sorting)
 
+  const sorted = useMemo(() => {
+    const arr = [...filtered]; //정렬할 복사본 생성
+    switch (sortKey) {
+      case "priceAsc":
+        return arr.sort((a, b) => a.price - b.price);
+
+      case "priceDesc":
+        return arr.sort((a, b) => b.price - a.price);
+
+      case "popular":
+        return arr.sort((a, b) => b.rating - a.rating);
+
+      default:
+        return arr.sort((a, b) => a.id - b.id);
+    }
+
+  }, [filtered, sortKey])
+
+
   //페이지네이션
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 8; //페이지당 출력할 상품 개수
-  const totalCount = filtered.length;
+  const totalCount = sorted.length;
   const pagenationCount = Math.ceil(totalCount / PAGE_SIZE);
 
   const start = (page - 1) * PAGE_SIZE;
   const end = start + PAGE_SIZE;
-  const pagedData = filtered.slice(start, end);//추출된 상품
+  const pagedData = sorted.slice(start, end);//추출된 상품
 
   const [pageGp, setPagegp] = useState(1); //페이지네이션 그룹 번호
   const PAGEGP_SIZE = 5;
@@ -143,7 +159,7 @@ export default function ProductList({ keyword }) {
             <h3>카테고리</h3>
             <div className={styles.fields}>
               <div className={styles.field}>
-                <input type="radio" id="category_all" name="category" value="all" onChange={()=>setCategory('all')}/>
+                <input type="radio" id="category_all" name="category" value="all" onChange={() => setCategory('all')} />
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 1 8 1Z"
@@ -154,7 +170,7 @@ export default function ProductList({ keyword }) {
               {
                 categories.map((c) =>
                   <div className={styles.field}>
-                    <input type="radio" id={c} name="category" value={c} onChange={()=>setCategory(c)}/>
+                    <input type="radio" id={c} name="category" value={c} onChange={() => setCategory(c)} />
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path
                         d="M8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 1 8 1Z"
@@ -173,7 +189,7 @@ export default function ProductList({ keyword }) {
               {
                 PRICE_RANGES.map((r) =>
                   <div className={styles.field}>
-                    <input type="radio" id={`price_${r.key}`} name="price" value={r.label} onChange={()=>setPricekey(r.key)}/>
+                    <input type="radio" id={`price_${r.key}`} name="price" value={r.label} onChange={() => setPricekey(r.key)} />
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path
                         d="M8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 1 8 1Z"
@@ -189,7 +205,7 @@ export default function ProductList({ keyword }) {
             <h3>브랜드</h3>
             <div className={styles.fields}>
               <div className={styles.field}>
-                <input type="radio" id="brand_all" name="brand" value="all" onChange={()=>setBrand('all')} />
+                <input type="radio" id="brand_all" name="brand" value="all" onChange={() => setBrand('all')} />
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 1 8 1Z"
@@ -200,7 +216,7 @@ export default function ProductList({ keyword }) {
               {
                 brands.map(b =>
                   <div className={styles.field}>
-                    <input type="radio" id={b} name="brand" value={b} onChange={()=>setBrand(b)}/>
+                    <input type="radio" id={b} name="brand" value={b} onChange={() => setBrand(b)} />
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path
                         d="M8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 1 8 1Z"
@@ -221,10 +237,10 @@ export default function ProductList({ keyword }) {
           <h2>인기상품</h2>
           <div className={styles.sort}>
             <span>총 <span>{filteredArr.length}</span>개 상품</span>
-            <select 
-              name="" 
+            <select
+              name=""
               id="sort"
-              onChange={(e)=>setSortkey(e.target.value)}
+              onChange={(e) => setSortkey(e.target.value)}
             >
               <option value="">정렬 옵션을 선택해주세요.</option>
               {
