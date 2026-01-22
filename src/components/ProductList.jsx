@@ -36,6 +36,25 @@ export default function ProductList({ keyword }) {
   console.log(brands);
 
   //필터링(filtering)
+  const filtered = useMemo(() =>{
+    const byCategory = (p)=> category === 'all' ? true  : p.category === category;
+    const byBrand = (p)=> brand === 'all' ? true  : p.brand === brand;
+    const byPrice = (p)=>{
+      switch(pricekey){
+        case "":
+          return 
+        case "":
+          return 
+        case "":
+          return 
+        default:
+          return 
+      }
+    }
+    return all.filter(p=>byCategory(p) && byBrand(p) && byPrice(p));
+    },[all, category, brand, pricekey]
+  );
+   
 
   //필터 초기화
   const resetFilter = ()=>{
@@ -50,12 +69,12 @@ export default function ProductList({ keyword }) {
   //페이지네이션
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 8; //페이지당 출력할 상품 개수
-  const totalCount = filteredArr.length;
+  const totalCount = filtered.length;
   const pagenationCount = Math.ceil(totalCount / PAGE_SIZE);
 
   const start = (page - 1) * PAGE_SIZE;
   const end = start + PAGE_SIZE;
-  const pagedData = filteredArr.slice(start, end);//추출된 상품
+  const pagedData = filtered.slice(start, end);//추출된 상품
 
   const [pageGp, setPagegp] = useState(1); //페이지네이션 그룹 번호
   const PAGEGP_SIZE = 5;
