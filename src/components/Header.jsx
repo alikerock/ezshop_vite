@@ -26,10 +26,10 @@ export default function Header({onSearch}) {
           </button>
           <div className={styles.left}>
             <h1>
-              <a href="index.html">
+              <Link to="/">
                 <img src="images/logo.svg" alt="logo" />
                 <span className="hidden">EST-shop logo</span>
-              </a>
+              </Link>            
             </h1>
             <form action="" onSubmit={handleSubmit}>
               <img src="images/icon_search.svg" alt="" />
