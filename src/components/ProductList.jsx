@@ -149,7 +149,33 @@ export default function ProductList({ keyword }) {
   if (error) {
     return <p>{error}</p>
   }
-
+  if(loading){
+    return(
+      <div className={`container ${styles.productWrapper}`}>
+        <aside className={styles.skeletonBoxWrapper}>
+          <div className={`${styles.skeletonBox} ${styles.skeleton}`}></div>
+          <div className={`${styles.skeletonBox} ${styles.skeleton}`}></div>
+          <div className={`${styles.skeletonBox} ${styles.skeleton}`}></div>
+          <div className={`${styles.skeletonBox} ${styles.skeleton}`}></div> 
+        </aside>
+        <section className={styles.productListWrapper}>
+          <header>
+            <h2>인기상품</h2>
+          </header>
+          <ul className={styles.productList}>
+            <li className={`${styles.cardSkeleton} ${styles.skeleton}`}></li>
+            <li className={`${styles.cardSkeleton} ${styles.skeleton}`}></li>
+            <li className={`${styles.cardSkeleton} ${styles.skeleton}`}></li>
+            <li className={`${styles.cardSkeleton} ${styles.skeleton}`}></li>
+            <li className={`${styles.cardSkeleton} ${styles.skeleton}`}></li>
+            <li className={`${styles.cardSkeleton} ${styles.skeleton}`}></li>
+            <li className={`${styles.cardSkeleton} ${styles.skeleton}`}></li>
+            <li className={`${styles.cardSkeleton} ${styles.skeleton}`}></li>
+          </ul>
+        </section>
+      </div>
+    )
+  }
   return (
     <div className={`container ${styles.productWrapper}`}>
       <aside>
@@ -248,18 +274,12 @@ export default function ProductList({ keyword }) {
               }
             </select>
           </div>
-        </header>
-
-        {loading ?
-          <p>로딩중</p>
-          :
-          <ul className={styles.productList}>
-            {
-              pagedData.map(p => <ProductCard key={p.id} data={p} />)
-            }
-          </ul>
-        }
-
+        </header>        
+        <ul className={styles.productList}>
+          {
+            pagedData.map(p => <ProductCard key={p.id} data={p} />)
+          }
+        </ul>
         <div className={styles.pagination}>
           <button
             className={styles.pageBtn}
